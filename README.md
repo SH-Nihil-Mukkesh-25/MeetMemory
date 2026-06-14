@@ -192,3 +192,12 @@ GROQ_API_KEY=           # Required — get from console.groq.com
 HINDSIGHT_API_KEY=      # Required
 NEXT_PUBLIC_APP_URL=    # Optional — defaults to http://localhost:3000
 ```
+
+---
+
+## Teammates
+
+- SH Nihil Mukkesh
+- P Dakshin Raj
+- Shre Raam PJ
+- Vibin Ragav S

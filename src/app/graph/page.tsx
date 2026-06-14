@@ -57,7 +57,7 @@ function buildGraphData(): GraphData {
 
     let hasConnections = false;
 
-    m.topicsDiscussed.forEach(t => {
+    (m.topicsDiscussed || []).filter(Boolean).forEach(t => {
       hasConnections = true;
       const id = `topic:${t.toLowerCase()}`;
       addNode(id, t, 'topic');
@@ -65,7 +65,7 @@ function buildGraphData(): GraphData {
       addLink(id, meetingNodeId, 'meeting');
     });
 
-    m.concernsRaised.forEach(c => {
+    (m.concernsRaised || []).filter(Boolean).forEach(c => {
       hasConnections = true;
       const id = `concern:${c.toLowerCase()}`;
       addNode(id, c, 'concern');
@@ -73,7 +73,7 @@ function buildGraphData(): GraphData {
       addLink(id, meetingNodeId, 'meeting');
     });
 
-    m.actionItems.forEach(a => {
+    (m.actionItems || []).filter(Boolean).forEach(a => {
       hasConnections = true;
       const short = a.length > 30 ? a.slice(0, 30) + '…' : a;
       const id = `action:${a.toLowerCase().slice(0, 40)}`;

@@ -3,14 +3,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { Plus, Users, Building2, Briefcase, Calendar, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Plus, Users, Building2, Briefcase, Calendar, Loader2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { getClients, createClient, getMeetings } from '@/lib/store';
+import { getClients, createClient, getMeetings, deleteClient } from '@/lib/store';
 import { Client } from '@/types';
 
 interface NewClientFormData {
@@ -96,13 +97,22 @@ function NewClientDialog({ open, onOpenChange, onCreated }: {
   );
 }
 
-function ClientCard({ client }: { client: Client }) {
+function ClientCard({ client, onDelete }: { client: Client; onDelete: () => void }) {
+  const router = useRouter();
   const meetings = getMeetings(client.id);
   const lastMeeting = meetings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this client? All their meetings will be lost.')) {
+      deleteClient(client.id);
+      onDelete();
+    }
+  };
+
   return (
-    <Link href={`/clients/${client.id}`} className="block group">
-      <div className="rounded-xl border border-border bg-card p-5 hover:border-border/80 hover:bg-card/80 transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
+    <div onClick={() => router.push(`/clients/${client.id}`)} className="block group cursor-pointer">
+      <div className="rounded-xl border border-border bg-card p-5 hover:border-border/80 hover:bg-card/80 transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 relative">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-lg font-bold text-white flex-shrink-0 shadow-md shadow-violet-500/20">
@@ -116,10 +126,17 @@ function ClientCard({ client }: { client: Client }) {
               </p>
             </div>
           </div>
-          <div className="text-right flex-shrink-0">
+          <div className="text-right flex-shrink-0 flex items-center gap-2">
             <Badge variant="outline" className="text-xs bg-secondary border-border">
               {meetings.length} meeting{meetings.length !== 1 ? 's' : ''}
             </Badge>
+            <button 
+              onClick={handleDelete}
+              title="Delete client"
+              className="p-1.5 text-zinc-500 hover:text-rose-500 hover:bg-rose-500/10 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -130,7 +147,7 @@ function ClientCard({ client }: { client: Client }) {
           </div>
         )}
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -180,7 +197,7 @@ export default function ClientsPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {clients.map(client => (
-            <ClientCard key={client.id} client={client} />
+            <ClientCard key={client.id} client={client} onDelete={refresh} />
           ))}
         </div>
       )}

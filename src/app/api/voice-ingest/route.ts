@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Groq from 'groq-sdk';
-import { GROQ_MODEL } from '@/lib/groq';
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+import { groq, safeGroqJsonCompletion } from '@/lib/groq';
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,48 +60,17 @@ Return ONLY this JSON:
 Transcript:
 ${transcript}`;
 
-    let extracted: {
-      title: string;
-      topicsDiscussed: string[];
-      concernsRaised: string[];
-      actionItems: string[];
-      sentiment: 'positive' | 'cautiously_positive' | 'neutral' | 'negative';
-      dealStage: 'discovery' | 'proposal' | 'negotiation' | 'closed_won' | 'closed_lost' | 'on_hold';
-      rawSummary: string;
+    const fallbackState = {
+      title: 'Voice Note — ' + new Date().toLocaleDateString(),
+      topicsDiscussed: [],
+      concernsRaised: [],
+      actionItems: [],
+      sentiment: 'neutral' as const,
+      dealStage: 'discovery' as const,
+      rawSummary: transcript.slice(0, 300),
     };
 
-    try {
-      const completion = await groq.chat.completions.create({
-        model: GROQ_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user',   content: userPrompt },
-        ],
-        temperature: 0.2,
-        max_tokens: 800,
-        stream: false,
-      });
-
-      let content = completion.choices[0]?.message?.content || '';
-      // Strip thinking tags
-      content = content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON found in response');
-      extracted = JSON.parse(jsonMatch[0]);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Extraction failed';
-      console.error('[voice-ingest] Extraction error:', msg);
-      // Return a fallback so the UI can still surface the transcript
-      extracted = {
-        title: 'Voice Note — ' + new Date().toLocaleDateString(),
-        topicsDiscussed: [],
-        concernsRaised: [],
-        actionItems: [],
-        sentiment: 'neutral',
-        dealStage: 'discovery',
-        rawSummary: transcript.slice(0, 300),
-      };
-    }
+    const extracted = await safeGroqJsonCompletion(systemPrompt, userPrompt, fallbackState);
 
     // Sanitise arrays
     extracted.topicsDiscussed = (extracted.topicsDiscussed || []).filter(Boolean);

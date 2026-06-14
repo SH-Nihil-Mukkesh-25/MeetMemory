@@ -1,10 +1,31 @@
-# MeetMemory 🧠
+<div align="center">
+  <img src="./docs/logo.png" alt="MeetMemory Logo" height="100" />
 
-> AI-powered client relationship memory — every meeting makes your next prep brief smarter.
+  <h3 align="center">The Cognitive Memory Engine for Client Relationships</h3>
 
-## Screenshot
+  <p align="center">
+    Stop starting from scratch. MeetMemory gives your AI an infallible, ever-growing contextual memory of every interaction, concern, and commitment. Armed with <strong>Hindsight</strong> semantic recall, it synthesizes years of history into razor-sharp, actionable prep briefs in seconds—giving you an unfair advantage before every meeting.
+    <br />
+    <br />
+    <a href="#features"><strong>Explore Features »</strong></a>
+  </p>
+</div>
 
-_Add a demo screenshot or recording here after recording your demo._
+<br/>
+
+## UI Screenshots
+
+### Homescreen
+![Homescreen](./docs/homescreen.png)
+
+### Clients
+![Clients](./docs/clients.png)
+
+### Knowledge Graph
+![Knowledge Graph](./docs/knowledge_graph.png)
+
+### Universal AI
+![Universal AI](./docs/universal_ai.png)
 
 ---
 
@@ -22,11 +43,13 @@ The more meetings stored, the smarter the briefing becomes.
 
 | Feature | Description |
 |---|---|
+| 👥 **Client Management** | Create, track, and delete clients with a unified relationship dashboard |
 | 🎙️ **Meeting Recorder** | Structured 3-step form — topics, concerns, action items, sentiment, deal stage |
 | 🎤 **Voice Note Ingest** | Record or upload audio → Whisper transcribes → Groq extracts structured memory |
 | 🧠 **AI Prep Brief** | Hindsight recall + LLM synthesis generates a sharp, context-aware briefing doc |
 | ⚡ **Before/After Demo Mode** | Side-by-side comparison: generic AI vs Hindsight-powered brief |
-| 🔍 **Inline Memory Search** | Ask anything about a client — RAG over Hindsight returns cited answers |
+| 🔍 **Inline Memory Search** | Ask anything about a specific client — RAG over Hindsight returns cited answers |
+| 🌎 **Universal Memory Search**| Global Ask MeetMemory across all clients to find overarching trends and risks |
 | 📊 **Relationship Health** | AI scores (0-100) with sparkline, trend, deal momentum, top risks & opportunities |
 | 🕸️ **Knowledge Graph** | D3 force-directed graph of all clients, topics, concerns, and action items |
 | 🌱 **Demo Seed** | One-click seed of 4 realistic meetings for any client (dev/`?demo=true`) |
@@ -42,7 +65,7 @@ The more meetings stored, the smarter the briefing becomes.
 ```
 Browser (Next.js App Router)
 │
-├── /clients                  → Client list + New Client dialog
+├── /clients                  → Client list + New Client dialog + Delete Client
 ├── /clients/[id]             → Detail page
 │   ├── Timeline              → Expandable meeting cards, sentiment dots
 │   ├── VoiceNoteRecorder     → MediaRecorder → /api/voice-ingest
@@ -50,6 +73,7 @@ Browser (Next.js App Router)
 │   └── RelationshipHealth    → /api/relationship-health (Hindsight + Groq scoring)
 ├── /clients/[id]/prep        → Prep brief page
 │   └── Demo Mode             → Cold vs Hot side-by-side
+├── /ask                      → Global Memory Search (Universal AI)
 └── /graph                    → D3 knowledge graph
 │
 API Routes (Next.js Route Handlers)
@@ -150,6 +174,8 @@ Open [http://localhost:3000](http://localhost:3000).
 6. **Demo Mode** → toggle Before/After to show the difference memory makes
 7. **Calculate health** → sidebar → **Calculate Health** → see score, sparkline, risk/opportunity
 8. **View the graph** → `/graph` — drag nodes, filter by type, click to explore
+9. **Universal Search** → `/ask` — ask global questions across all your tracked clients
+10. **Delete Client** → dashboard or detail page — delete client and cleanup history
 
 ---
 

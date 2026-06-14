@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, use } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import {
-  Building2, Calendar, ChevronDown, ChevronUp, AlertCircle, CheckSquare2, Brain, Plus, Database, Clock, Network
+  Building2, Calendar, ChevronDown, ChevronUp, AlertCircle, CheckSquare2, Brain, Plus, Database, Clock, Network, Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +13,9 @@ import { MemoryChat } from './components/MemoryChat';
 import { RelationshipHealth } from './components/RelationshipHealth';
 import { VoiceNoteRecorder } from './components/VoiceNoteRecorder';
 import { DemoSeeder } from './components/DemoSeeder';
-import { getClient, getMeetings } from '@/lib/store';
+import { getClient, getMeetings, deleteClient } from '@/lib/store';
 import { Client, Meeting } from '@/types';
+import { useRouter } from 'next/navigation';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -161,9 +162,17 @@ function EmptyMeetings({ clientName, onAdd }: { clientName: string; onAdd: () =>
 
 export default function ClientDetailPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
+  const router = useRouter();
   const [client, setClient] = useState<Client | null>(null);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [recorderOpen, setRecorderOpen] = useState(false);
+
+  const handleDeleteClient = () => {
+    if (window.confirm('Are you sure you want to delete this client? All their meetings will be lost.')) {
+      deleteClient(params.id);
+      router.push('/clients');
+    }
+  };
 
   const refresh = useCallback(() => {
     const c = getClient(params.id);
@@ -247,6 +256,9 @@ export default function ClientDetailPage(props: { params: Promise<{ id: string }
               <Brain className="h-4 w-4 mr-1.5" />Prepare Brief
             </Button>
           </Link>
+          <Button variant="outline" size="sm" onClick={handleDeleteClient} className="border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.02)] hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 text-zinc-300 transition-colors px-2.5">
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 

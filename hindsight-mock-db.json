@@ -1,0 +1,392 @@
+[
+  {
+    "id": "e0418593-95a4-4de8-9652-e3ec3fe71a46",
+    "text": "Meeting on 2026-05-24T10:15:57.625Z with Steve Harrington (Client ID: 1090532a-a529-405b-8fd4-16569fa46d89). Topics discussed: pricing structure, team size, current pain points. Concerns: budget constraints, competing vendor evaluation. Action items: send pricing proposal, share case studies. Sentiment: cautiously_positive. Deal stage: discovery. Summary: First call with client. Strong interest but budget is a concern. They are evaluating two other vendors. Promised to send pricing proposal and relevant case studies by end of week.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "1090532a-a529-405b-8fd4-16569fa46d89",
+      "clientName": "Steve Harrington",
+      "meetingDate": "2026-05-24T10:15:57.625Z",
+      "meetingNumber": 1,
+      "topicsDiscussed": [
+        "pricing structure",
+        "team size",
+        "current pain points"
+      ],
+      "concernsRaised": [
+        "budget constraints",
+        "competing vendor evaluation"
+      ],
+      "actionItems": [
+        "send pricing proposal",
+        "share case studies"
+      ],
+      "sentiment": "cautiously_positive",
+      "dealStage": "discovery",
+      "rawSummary": "First call with client. Strong interest but budget is a concern. They are evaluating two other vendors. Promised to send pricing proposal and relevant case studies by end of week.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "d3240d6a-4214-4526-a384-94cb86ffe271",
+    "text": "Meeting on 2026-05-31T10:15:57.625Z with Steve Harrington (Client ID: 1090532a-a529-405b-8fd4-16569fa46d89). Topics discussed: enterprise plan features, implementation timeline, onboarding process. Concerns: 6-week implementation feels long, needs board approval for budget. Action items: revise timeline to 4 weeks, prepare board presentation deck. Sentiment: positive. Deal stage: proposal. Summary: Walked through the enterprise proposal. Client loves the feature set. Main friction is the implementation timeline and internal budget approval. They are ready to move if we can compress the timeline and help them get board buy-in.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "1090532a-a529-405b-8fd4-16569fa46d89",
+      "clientName": "Steve Harrington",
+      "meetingDate": "2026-05-31T10:15:57.625Z",
+      "meetingNumber": 2,
+      "topicsDiscussed": [
+        "enterprise plan features",
+        "implementation timeline",
+        "onboarding process"
+      ],
+      "concernsRaised": [
+        "6-week implementation feels long",
+        "needs board approval for budget"
+      ],
+      "actionItems": [
+        "revise timeline to 4 weeks",
+        "prepare board presentation deck"
+      ],
+      "sentiment": "positive",
+      "dealStage": "proposal",
+      "rawSummary": "Walked through the enterprise proposal. Client loves the feature set. Main friction is the implementation timeline and internal budget approval. They are ready to move if we can compress the timeline and help them get board buy-in.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "460c4611-c961-4b66-b164-3fe3808fb3df",
+    "text": "Meeting on 2026-06-07T10:15:57.625Z with Steve Harrington (Client ID: 1090532a-a529-405b-8fd4-16569fa46d89). Topics discussed: API integration, data migration, security compliance, mobile requirements. Concerns: GDPR compliance questions, mobile app not on roadmap. Action items: send security whitepaper, confirm mobile app roadmap date, intro call with their IT team. Sentiment: cautiously_positive. Deal stage: negotiation. Summary: Technical stakeholder joined the call. Deep questions on security and compliance — we need to send the whitepaper. They revealed that mobile is a hard requirement and were disappointed it is not on the immediate roadmap. Need to escalate the mobile timeline internally.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "1090532a-a529-405b-8fd4-16569fa46d89",
+      "clientName": "Steve Harrington",
+      "meetingDate": "2026-06-07T10:15:57.625Z",
+      "meetingNumber": 3,
+      "topicsDiscussed": [
+        "API integration",
+        "data migration",
+        "security compliance",
+        "mobile requirements"
+      ],
+      "concernsRaised": [
+        "GDPR compliance questions",
+        "mobile app not on roadmap"
+      ],
+      "actionItems": [
+        "send security whitepaper",
+        "confirm mobile app roadmap date",
+        "intro call with their IT team"
+      ],
+      "sentiment": "cautiously_positive",
+      "dealStage": "negotiation",
+      "rawSummary": "Technical stakeholder joined the call. Deep questions on security and compliance — we need to send the whitepaper. They revealed that mobile is a hard requirement and were disappointed it is not on the immediate roadmap. Need to escalate the mobile timeline internally.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "9debf7e2-c9e6-4824-9df0-8105ac7f3cb5",
+    "text": "Meeting on 2026-06-13T10:15:57.625Z with Steve Harrington (Client ID: 1090532a-a529-405b-8fd4-16569fa46d89). Topics discussed: final pricing, contract terms, rollout plan. Concerns: mobile still unresolved, procurement process takes 3 weeks. Action items: send revised contract, schedule kickoff for post-signing, confirm mobile roadmap commitment in writing. Sentiment: neutral. Deal stage: negotiation. Summary: Commercial review call. Pricing is agreed. Contract terms are mostly aligned. Two blockers remain: mobile roadmap commitment needs to be in writing, and their procurement process adds 3 weeks to the timeline. Deal is close but needs these resolved.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "1090532a-a529-405b-8fd4-16569fa46d89",
+      "clientName": "Steve Harrington",
+      "meetingDate": "2026-06-13T10:15:57.625Z",
+      "meetingNumber": 4,
+      "topicsDiscussed": [
+        "final pricing",
+        "contract terms",
+        "rollout plan"
+      ],
+      "concernsRaised": [
+        "mobile still unresolved",
+        "procurement process takes 3 weeks"
+      ],
+      "actionItems": [
+        "send revised contract",
+        "schedule kickoff for post-signing",
+        "confirm mobile roadmap commitment in writing"
+      ],
+      "sentiment": "neutral",
+      "dealStage": "negotiation",
+      "rawSummary": "Commercial review call. Pricing is agreed. Contract terms are mostly aligned. Two blockers remain: mobile roadmap commitment needs to be in writing, and their procurement process adds 3 weeks to the timeline. Deal is close but needs these resolved.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "90cb8a3a-eb28-4e33-8b28-86dca2c24e4b",
+    "text": "Meeting on 2026-06-14T00:00:00.000Z with Virat Kohli (Client ID: d4d791af-418a-48b6-a9d8-d846c0d7e98b). Topics discussed: Cricketing Shots. Concerns: 5th stump catch. Action items: none. Sentiment: neutral. Deal stage: on_hold.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "d4d791af-418a-48b6-a9d8-d846c0d7e98b",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-06-14T00:00:00.000Z",
+      "meetingNumber": 1,
+      "topicsDiscussed": [
+        "Cricketing Shots"
+      ],
+      "concernsRaised": [
+        "5th stump catch"
+      ],
+      "actionItems": [],
+      "sentiment": "neutral",
+      "dealStage": "on_hold",
+      "rawSummary": "",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "34a015b3-502d-46a9-9bf0-5ed1fac72058",
+    "text": "Meeting on 2026-05-24T10:45:14.188Z with Virat Kohli (Client ID: d4d791af-418a-48b6-a9d8-d846c0d7e98b). Topics discussed: pricing structure, team size, current pain points. Concerns: budget constraints, competing vendor evaluation. Action items: send pricing proposal, share case studies. Sentiment: cautiously_positive. Deal stage: discovery. Summary: First call with client. Strong interest but budget is a concern. They are evaluating two other vendors. Promised to send pricing proposal and relevant case studies by end of week.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "d4d791af-418a-48b6-a9d8-d846c0d7e98b",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-05-24T10:45:14.188Z",
+      "meetingNumber": 1,
+      "topicsDiscussed": [
+        "pricing structure",
+        "team size",
+        "current pain points"
+      ],
+      "concernsRaised": [
+        "budget constraints",
+        "competing vendor evaluation"
+      ],
+      "actionItems": [
+        "send pricing proposal",
+        "share case studies"
+      ],
+      "sentiment": "cautiously_positive",
+      "dealStage": "discovery",
+      "rawSummary": "First call with client. Strong interest but budget is a concern. They are evaluating two other vendors. Promised to send pricing proposal and relevant case studies by end of week.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "4adbbe6c-8fec-4e79-aab6-78cef70d1cc2",
+    "text": "Meeting on 2026-05-31T10:45:14.188Z with Virat Kohli (Client ID: d4d791af-418a-48b6-a9d8-d846c0d7e98b). Topics discussed: enterprise plan features, implementation timeline, onboarding process. Concerns: 6-week implementation feels long, needs board approval for budget. Action items: revise timeline to 4 weeks, prepare board presentation deck. Sentiment: positive. Deal stage: proposal. Summary: Walked through the enterprise proposal. Client loves the feature set. Main friction is the implementation timeline and internal budget approval. They are ready to move if we can compress the timeline and help them get board buy-in.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "d4d791af-418a-48b6-a9d8-d846c0d7e98b",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-05-31T10:45:14.188Z",
+      "meetingNumber": 2,
+      "topicsDiscussed": [
+        "enterprise plan features",
+        "implementation timeline",
+        "onboarding process"
+      ],
+      "concernsRaised": [
+        "6-week implementation feels long",
+        "needs board approval for budget"
+      ],
+      "actionItems": [
+        "revise timeline to 4 weeks",
+        "prepare board presentation deck"
+      ],
+      "sentiment": "positive",
+      "dealStage": "proposal",
+      "rawSummary": "Walked through the enterprise proposal. Client loves the feature set. Main friction is the implementation timeline and internal budget approval. They are ready to move if we can compress the timeline and help them get board buy-in.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "00fec21d-3973-4032-8d65-e6f0eb419804",
+    "text": "Meeting on 2026-06-07T10:45:14.188Z with Virat Kohli (Client ID: d4d791af-418a-48b6-a9d8-d846c0d7e98b). Topics discussed: API integration, data migration, security compliance, mobile requirements. Concerns: GDPR compliance questions, mobile app not on roadmap. Action items: send security whitepaper, confirm mobile app roadmap date, intro call with their IT team. Sentiment: cautiously_positive. Deal stage: negotiation. Summary: Technical stakeholder joined the call. Deep questions on security and compliance — we need to send the whitepaper. They revealed that mobile is a hard requirement and were disappointed it is not on the immediate roadmap. Need to escalate the mobile timeline internally.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "d4d791af-418a-48b6-a9d8-d846c0d7e98b",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-06-07T10:45:14.188Z",
+      "meetingNumber": 3,
+      "topicsDiscussed": [
+        "API integration",
+        "data migration",
+        "security compliance",
+        "mobile requirements"
+      ],
+      "concernsRaised": [
+        "GDPR compliance questions",
+        "mobile app not on roadmap"
+      ],
+      "actionItems": [
+        "send security whitepaper",
+        "confirm mobile app roadmap date",
+        "intro call with their IT team"
+      ],
+      "sentiment": "cautiously_positive",
+      "dealStage": "negotiation",
+      "rawSummary": "Technical stakeholder joined the call. Deep questions on security and compliance — we need to send the whitepaper. They revealed that mobile is a hard requirement and were disappointed it is not on the immediate roadmap. Need to escalate the mobile timeline internally.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "b43c6c99-7798-496b-8731-4ded2af35870",
+    "text": "Meeting on 2026-06-13T10:45:14.188Z with Virat Kohli (Client ID: d4d791af-418a-48b6-a9d8-d846c0d7e98b). Topics discussed: final pricing, contract terms, rollout plan. Concerns: mobile still unresolved, procurement process takes 3 weeks. Action items: send revised contract, schedule kickoff for post-signing, confirm mobile roadmap commitment in writing. Sentiment: neutral. Deal stage: negotiation. Summary: Commercial review call. Pricing is agreed. Contract terms are mostly aligned. Two blockers remain: mobile roadmap commitment needs to be in writing, and their procurement process adds 3 weeks to the timeline. Deal is close but needs these resolved.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "d4d791af-418a-48b6-a9d8-d846c0d7e98b",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-06-13T10:45:14.188Z",
+      "meetingNumber": 4,
+      "topicsDiscussed": [
+        "final pricing",
+        "contract terms",
+        "rollout plan"
+      ],
+      "concernsRaised": [
+        "mobile still unresolved",
+        "procurement process takes 3 weeks"
+      ],
+      "actionItems": [
+        "send revised contract",
+        "schedule kickoff for post-signing",
+        "confirm mobile roadmap commitment in writing"
+      ],
+      "sentiment": "neutral",
+      "dealStage": "negotiation",
+      "rawSummary": "Commercial review call. Pricing is agreed. Contract terms are mostly aligned. Two blockers remain: mobile roadmap commitment needs to be in writing, and their procurement process adds 3 weeks to the timeline. Deal is close but needs these resolved.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "1d53263c-d394-4edf-834f-a5dee50241ad",
+    "text": "Meeting on 2026-06-14T00:00:00.000Z with Virat Kohli (Client ID: cfe18e10-70b9-42a7-b686-466e930410f5). Topics discussed: Ads, Collabs. Concerns: Schedule. Action items: none. Sentiment: positive. Deal stage: on_hold. Summary: King Kohli !!!",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "cfe18e10-70b9-42a7-b686-466e930410f5",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-06-14T00:00:00.000Z",
+      "meetingNumber": 1,
+      "topicsDiscussed": [
+        "Ads",
+        "Collabs"
+      ],
+      "concernsRaised": [
+        "Schedule"
+      ],
+      "actionItems": [],
+      "sentiment": "positive",
+      "dealStage": "on_hold",
+      "rawSummary": "King Kohli !!!",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "741153be-25e8-419d-a5b0-c7ce44224371",
+    "text": "Meeting on 2026-05-24T11:02:19.319Z with Virat Kohli (Client ID: cfe18e10-70b9-42a7-b686-466e930410f5). Topics discussed: pricing structure, team size, current pain points. Concerns: budget constraints, competing vendor evaluation. Action items: send pricing proposal, share case studies. Sentiment: cautiously_positive. Deal stage: discovery. Summary: First call with client. Strong interest but budget is a concern. They are evaluating two other vendors. Promised to send pricing proposal and relevant case studies by end of week.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "cfe18e10-70b9-42a7-b686-466e930410f5",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-05-24T11:02:19.319Z",
+      "meetingNumber": 1,
+      "topicsDiscussed": [
+        "pricing structure",
+        "team size",
+        "current pain points"
+      ],
+      "concernsRaised": [
+        "budget constraints",
+        "competing vendor evaluation"
+      ],
+      "actionItems": [
+        "send pricing proposal",
+        "share case studies"
+      ],
+      "sentiment": "cautiously_positive",
+      "dealStage": "discovery",
+      "rawSummary": "First call with client. Strong interest but budget is a concern. They are evaluating two other vendors. Promised to send pricing proposal and relevant case studies by end of week.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "5453202a-90f7-4dbf-901e-beab50b9bf1e",
+    "text": "Meeting on 2026-05-31T11:02:19.319Z with Virat Kohli (Client ID: cfe18e10-70b9-42a7-b686-466e930410f5). Topics discussed: enterprise plan features, implementation timeline, onboarding process. Concerns: 6-week implementation feels long, needs board approval for budget. Action items: revise timeline to 4 weeks, prepare board presentation deck. Sentiment: positive. Deal stage: proposal. Summary: Walked through the enterprise proposal. Client loves the feature set. Main friction is the implementation timeline and internal budget approval. They are ready to move if we can compress the timeline and help them get board buy-in.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "cfe18e10-70b9-42a7-b686-466e930410f5",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-05-31T11:02:19.319Z",
+      "meetingNumber": 2,
+      "topicsDiscussed": [
+        "enterprise plan features",
+        "implementation timeline",
+        "onboarding process"
+      ],
+      "concernsRaised": [
+        "6-week implementation feels long",
+        "needs board approval for budget"
+      ],
+      "actionItems": [
+        "revise timeline to 4 weeks",
+        "prepare board presentation deck"
+      ],
+      "sentiment": "positive",
+      "dealStage": "proposal",
+      "rawSummary": "Walked through the enterprise proposal. Client loves the feature set. Main friction is the implementation timeline and internal budget approval. They are ready to move if we can compress the timeline and help them get board buy-in.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "08e230b5-3302-41e0-8bd6-0618eff9020e",
+    "text": "Meeting on 2026-06-07T11:02:19.319Z with Virat Kohli (Client ID: cfe18e10-70b9-42a7-b686-466e930410f5). Topics discussed: API integration, data migration, security compliance, mobile requirements. Concerns: GDPR compliance questions, mobile app not on roadmap. Action items: send security whitepaper, confirm mobile app roadmap date, intro call with their IT team. Sentiment: cautiously_positive. Deal stage: negotiation. Summary: Technical stakeholder joined the call. Deep questions on security and compliance — we need to send the whitepaper. They revealed that mobile is a hard requirement and were disappointed it is not on the immediate roadmap. Need to escalate the mobile timeline internally.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "cfe18e10-70b9-42a7-b686-466e930410f5",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-06-07T11:02:19.319Z",
+      "meetingNumber": 3,
+      "topicsDiscussed": [
+        "API integration",
+        "data migration",
+        "security compliance",
+        "mobile requirements"
+      ],
+      "concernsRaised": [
+        "GDPR compliance questions",
+        "mobile app not on roadmap"
+      ],
+      "actionItems": [
+        "send security whitepaper",
+        "confirm mobile app roadmap date",
+        "intro call with their IT team"
+      ],
+      "sentiment": "cautiously_positive",
+      "dealStage": "negotiation",
+      "rawSummary": "Technical stakeholder joined the call. Deep questions on security and compliance — we need to send the whitepaper. They revealed that mobile is a hard requirement and were disappointed it is not on the immediate roadmap. Need to escalate the mobile timeline internally.",
+      "followUpDate": null
+    }
+  },
+  {
+    "id": "6420b8d1-4e5f-4aa4-8fcd-4eacdadd69b2",
+    "text": "Meeting on 2026-06-13T11:02:19.319Z with Virat Kohli (Client ID: cfe18e10-70b9-42a7-b686-466e930410f5). Topics discussed: final pricing, contract terms, rollout plan. Concerns: mobile still unresolved, procurement process takes 3 weeks. Action items: send revised contract, schedule kickoff for post-signing, confirm mobile roadmap commitment in writing. Sentiment: neutral. Deal stage: negotiation. Summary: Commercial review call. Pricing is agreed. Contract terms are mostly aligned. Two blockers remain: mobile roadmap commitment needs to be in writing, and their procurement process adds 3 weeks to the timeline. Deal is close but needs these resolved.",
+    "metadata": {
+      "memoryType": "meeting_record",
+      "clientId": "cfe18e10-70b9-42a7-b686-466e930410f5",
+      "clientName": "Virat Kohli",
+      "meetingDate": "2026-06-13T11:02:19.319Z",
+      "meetingNumber": 4,
+      "topicsDiscussed": [
+        "final pricing",
+        "contract terms",
+        "rollout plan"
+      ],
+      "concernsRaised": [
+        "mobile still unresolved",
+        "procurement process takes 3 weeks"
+      ],
+      "actionItems": [
+        "send revised contract",
+        "schedule kickoff for post-signing",
+        "confirm mobile roadmap commitment in writing"
+      ],
+      "sentiment": "neutral",
+      "dealStage": "negotiation",
+      "rawSummary": "Commercial review call. Pricing is agreed. Contract terms are mostly aligned. Two blockers remain: mobile roadmap commitment needs to be in writing, and their procurement process adds 3 weeks to the timeline. Deal is close but needs these resolved.",
+      "followUpDate": null
+    }
+  }
+]

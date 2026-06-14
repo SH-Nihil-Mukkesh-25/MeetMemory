@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { recallMemories } from '@/lib/hindsight';
-import { groq, GROQ_MODEL } from '@/lib/groq';
+import { safeGroqTextCompletion } from '@/lib/groq';
 import { format } from 'date-fns';
 
 export async function POST(request: NextRequest) {
@@ -40,28 +40,13 @@ export async function POST(request: NextRequest) {
       })
       .join('\n\n---\n\n');
 
-    const completion = await groq.chat.completions.create({
-      model: GROQ_MODEL,
-      messages: [
-        {
-          role: 'system',
-          content: `You are MeetMemory, an AI assistant with access to a user's meeting history with ${clientName}. 
+    const systemPrompt = `You are MeetMemory, an AI assistant with access to a user's meeting history with ${clientName}. 
 Answer questions concisely and specifically. Always cite meeting numbers and dates when referencing facts. 
-Be direct. If the answer isn't in the memories, say so clearly. No thinking tags, no preamble — just the answer.`,
-        },
-        {
-          role: 'user',
-          content: `Based on these meeting memories with ${clientName}, answer this question concisely:\n\n"${query}"\n\nMeeting history:\n\n${memoriesText}`,
-        },
-      ],
-      temperature: 0.3,
-      max_tokens: 400,
-      stream: false,
-    });
+Be direct. If the answer isn't in the memories, say so clearly. No thinking tags, no preamble — just the answer.`;
 
-    let answer = completion.choices[0]?.message?.content || 'No answer generated.';
-    // Strip any thinking tags
-    answer = answer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    const userPrompt = `Based on these meeting memories with ${clientName}, answer this question concisely:\n\n"${query}"\n\nMeeting history:\n\n${memoriesText}`;
+
+    const answer = await safeGroqTextCompletion(systemPrompt, userPrompt, 'No answer generated.', 0.3, 400);
 
     const meetingsReferenced = memories.map(m => m.meetingNumber);
 

@@ -97,11 +97,21 @@ export function DemoSeeder({ clientId, clientName, onSuccess }: DemoSeederProps)
         const local = createMeeting(m);
 
         // Store in Hindsight via API
-        await fetch('/api/meetings', {
+        const res = await fetch('/api/meetings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...m, id: local.id }),
+          body: JSON.stringify({ 
+            ...m, 
+            id: local.id,
+            memoryType: 'meeting_record',
+            meetingDate: m.date
+          }),
         });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(`Failed to store memory: ${errorData.error || res.statusText}`);
+        }
 
         // Small delay so Hindsight doesn't get hammered
         await new Promise(r => setTimeout(r, 200));

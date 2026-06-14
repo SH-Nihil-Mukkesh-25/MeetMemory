@@ -61,6 +61,24 @@ class LocalStore {
     return newClient;
   }
 
+  deleteClient(id: string) {
+    if (this.clients.has(id)) {
+      this.clients.delete(id);
+      this.saveClients();
+      
+      let meetingsChanged = false;
+      for (const [meetingId, meeting] of Array.from(this.meetings.entries())) {
+        if (meeting.clientId === id) {
+          this.meetings.delete(meetingId);
+          meetingsChanged = true;
+        }
+      }
+      if (meetingsChanged) {
+        this.saveMeetings();
+      }
+    }
+  }
+
   getMeetings(clientId: string): Meeting[] {
     return Array.from(this.meetings.values()).filter(m => m.clientId === clientId);
   }
@@ -87,6 +105,7 @@ const store = new LocalStore();
 export const getClients = () => store.getClients();
 export const getClient = (id: string) => store.getClient(id);
 export const createClient = (data: Omit<Client, 'id' | 'createdAt'>) => store.createClient(data);
+export const deleteClient = (id: string) => store.deleteClient(id);
 export const getMeetings = (clientId: string) => store.getMeetings(clientId);
 export const createMeeting = (data: Omit<Meeting, 'id' | 'createdAt'>) => store.createMeeting(data);
 export const getAllMeetings = () => store.getAllMeetings();

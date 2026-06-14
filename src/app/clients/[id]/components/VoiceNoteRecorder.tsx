@@ -8,6 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { createMeeting, getMeetings } from '@/lib/store';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -191,7 +192,7 @@ export function VoiceNoteRecorder({
         clientId,
         clientName,
         title:           extracted.title,
-        date:            new Date().toISOString(),
+        meetingDate:     new Date().toISOString(),
         topicsDiscussed: extracted.topicsDiscussed,
         concernsRaised:  extracted.concernsRaised,
         actionItems:     extracted.actionItems,
@@ -199,14 +200,32 @@ export function VoiceNoteRecorder({
         dealStage:       extracted.dealStage,
         rawSummary:      extracted.rawSummary,
         meetingNumber:   meetingCount + 1,
+        memoryType:      'meeting_record',
       };
       const res = await fetch('/api/meetings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
+      
       const data = await res.json();
-      if (data.error) throw new Error(data.message);
+      if (!res.ok || data.error) throw new Error(data.error || 'Failed to save memory');
+
+      createMeeting({
+        clientId,
+        clientName,
+        title:           extracted.title,
+        date:            body.meetingDate,
+        topicsDiscussed: extracted.topicsDiscussed,
+        concernsRaised:  extracted.concernsRaised,
+        actionItems:     extracted.actionItems,
+        sentiment:       extracted.sentiment,
+        dealStage:       extracted.dealStage,
+        rawSummary:      extracted.rawSummary,
+        meetingNumber:   meetingCount + 1,
+        hindsightMemoryId: data.memoryId,
+      });
+
       toast.success('✓ Voice note transcribed and stored', {
         description: `${extracted.topicsDiscussed.length} topics · ${extracted.actionItems.length} actions saved to Hindsight`,
       });

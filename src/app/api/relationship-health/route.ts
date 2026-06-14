@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { recallMemories } from '@/lib/hindsight';
-import { groq, GROQ_MODEL } from '@/lib/groq';
+import { safeGroqJsonCompletion } from '@/lib/groq';
 import { format } from 'date-fns';
 
 export interface RelationshipHealthData {
@@ -32,7 +32,19 @@ export async function POST(request: NextRequest) {
     );
 
     if (memories.length === 0) {
-      return NextResponse.json({ error: 'no_memories', message: 'No meetings found for this client.' }, { status: 404 });
+      return NextResponse.json({
+        health: {
+          overallScore: 50,
+          trend: 'stable',
+          engagementLevel: 'low',
+          dealMomentum: 'moderate',
+          sentimentHistory: [],
+          topRisk: 'No historical data to assess risk.',
+          topOpportunity: 'Establish initial relationship and trust.',
+          reasoning: 'No meeting history exists for this client. Score reflects a neutral baseline.'
+        },
+        meetingsAnalyzed: 0
+      });
     }
 
     // Sort chronologically for sentimentHistory
@@ -77,28 +89,22 @@ ${memoriesText}
 
 Return ONLY the JSON object.`;
 
-    const completion = await groq.chat.completions.create({
-      model: GROQ_MODEL,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      temperature: 0.2,
-      max_tokens: 800,
-      stream: false,
-    });
+    const fallbackHealth: RelationshipHealthData = {
+      overallScore: 50,
+      trend: 'stable',
+      engagementLevel: 'medium',
+      dealMomentum: 'moderate',
+      sentimentHistory: Array(chronological.length).fill(50),
+      topRisk: 'Data processing timeout or error.',
+      topOpportunity: 'Refresh the analysis.',
+      reasoning: 'The AI model timed out or failed to parse the response.'
+    };
 
-    let content = completion.choices[0]?.message?.content || '';
-    content = content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON in response');
-
-    const data: RelationshipHealthData = JSON.parse(jsonMatch[0]);
+    const data = await safeGroqJsonCompletion<RelationshipHealthData>(systemPrompt, userPrompt, fallbackHealth, 0.2);
 
     // Validate + clamp
-    data.overallScore = Math.max(0, Math.min(100, Math.round(data.overallScore)));
-    if (!Array.isArray(data.sentimentHistory)) data.sentimentHistory = [];
+    data.overallScore = Math.max(0, Math.min(100, Math.round(data.overallScore || 50)));
+    if (!Array.isArray(data.sentimentHistory)) data.sentimentHistory = Array(chronological.length).fill(50);
     data.sentimentHistory = data.sentimentHistory.map(v => Math.max(0, Math.min(100, Math.round(Number(v) || 50))));
 
     return NextResponse.json({ health: data, meetingsAnalyzed: memories.length });

@@ -34,11 +34,11 @@ export function Navbar() {
       >
         {/* Left: Logo (Absolutely positioned for exact leftmost pinning) */}
         <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center h-full z-10">
-          <Link href="/" className="flex items-center group mt-1.5">
+          <Link href="/" className="flex items-center group mt-1.5 w-16 h-12">
             <img 
               src="/logo.png" 
               alt="MeetMemory Logo" 
-              className="h-16 w-auto object-contain transition-transform hover:scale-105"
+              className="h-16 w-auto object-contain transition-transform group-hover:scale-105 pointer-events-none"
               style={{ transform: 'scale(3.0)', transformOrigin: 'left center' }}
             />
           </Link>

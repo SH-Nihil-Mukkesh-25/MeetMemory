@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { recallMemories } from '@/lib/hindsight';
-import { groq, GROQ_MODEL } from '@/lib/groq';
+import { safeGroqJsonCompletion } from '@/lib/groq';
 import { MeetingMemory, PrepBrief } from '@/types';
 import { format } from 'date-fns';
 
@@ -53,12 +53,20 @@ export async function POST(request: NextRequest) {
     // 1. Recall memories from Hindsight
     const memories = await recallMemories(recallQuery, clientId, 10);
 
-    // 2. No memories guard
+    // 2. No memories guard - Return graceful zero-state
     if (memories.length === 0) {
       return NextResponse.json({
-        error: 'no_memories',
-        message: 'No meeting history found for this client. Add some meetings first.',
-      }, { status: 404 });
+        brief: {
+          contextSummary: `No meeting history exists for ${clientName}. This will be your first recorded interaction.`,
+          openActionItems: ['None'],
+          suggestedTopics: ['Introductions', 'Discovery', 'Establish expectations'],
+          riskFlags: ['None known'],
+          relationshipSentiment: 'Unknown',
+          hindsightChunksUsed: 0,
+        },
+        memoriesUsed: 0,
+        memories: []
+      });
     }
 
     // 3. Build prompt
@@ -71,48 +79,17 @@ ${memoriesText}
 
 Generate the meeting prep brief now. Respond with ONLY the JSON object.`;
 
-    // 4. Call Groq with streaming
-    const stream = await groq.chat.completions.create({
-      model: GROQ_MODEL,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userMessage },
-      ],
-      temperature: 0.4,
-      max_tokens: 1500,
-      stream: true,
-    });
+    const fallbackBrief: PrepBrief = {
+      contextSummary: 'Failed to parse AI response or request timed out.',
+      openActionItems: [],
+      suggestedTopics: [],
+      riskFlags: ['AI response failed — try regenerating'],
+      relationshipSentiment: 'Unknown',
+      hindsightChunksUsed: memories.length,
+    };
 
-    // 5. Collect streamed chunks
-    let fullContent = '';
-    for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta?.content || '';
-      fullContent += delta;
-    }
-
-    // 6. Strip any thinking tags (qwen3 sometimes emits <think>...</think>)
-    fullContent = fullContent.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-
-    // 7. Extract JSON from response (handle possible markdown code fences)
-    const jsonMatch = fullContent.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('LLM returned no parseable JSON');
-    }
-
-    let brief: PrepBrief;
-    try {
-      brief = JSON.parse(jsonMatch[0]);
-      brief.hindsightChunksUsed = memories.length;
-    } catch {
-      brief = {
-        contextSummary: `Failed to parse AI response. Raw output: ${fullContent.slice(0, 200)}`,
-        openActionItems: [],
-        suggestedTopics: [],
-        riskFlags: ['AI response was malformed — try regenerating'],
-        relationshipSentiment: 'Unknown',
-        hindsightChunksUsed: memories.length,
-      };
-    }
+    const brief = await safeGroqJsonCompletion<PrepBrief>(SYSTEM_PROMPT, userMessage, fallbackBrief, 0.4);
+    brief.hindsightChunksUsed = memories.length;
 
     return NextResponse.json({ brief, memoriesUsed: memories.length, memories });
   } catch (error: unknown) {

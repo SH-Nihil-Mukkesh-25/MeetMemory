@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { recallMemories } from '@/lib/hindsight';
-import { groq, GROQ_MODEL } from '@/lib/groq';
+import { safeGroqTextCompletion } from '@/lib/groq';
 import { format } from 'date-fns';
 
 export async function POST(request: NextRequest) {
@@ -41,28 +41,14 @@ export async function POST(request: NextRequest) {
       })
       .join('\n\n---\n\n');
 
-    const completion = await groq.chat.completions.create({
-      model: GROQ_MODEL,
-      messages: [
-        {
-          role: 'system',
-          content: `You are MeetMemory, a premium AI colleague powered by Hindsight semantic memory. 
+    const systemPrompt = `You are MeetMemory, a premium AI colleague powered by Hindsight semantic memory. 
 Answer the user's question about the client ${clientName}.
 Always be concise, intelligent, and cite specific meeting numbers/dates from your memory.
-Do not use markdown headers, just plain conversational text.`,
-        },
-        {
-          role: 'user',
-          content: `Question: "${query}"\n\nHindsight Memories:\n\n${memoriesText}`,
-        },
-      ],
-      temperature: 0.3,
-      max_tokens: 500,
-      stream: false,
-    });
+Do not use markdown headers, just plain conversational text.`;
 
-    let answer = completion.choices[0]?.message?.content || 'No answer generated.';
-    answer = answer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    const userPrompt = `Question: "${query}"\n\nHindsight Memories:\n\n${memoriesText}`;
+
+    const answer = await safeGroqTextCompletion(systemPrompt, userPrompt, 'Request timed out or failed to generate an answer.', 0.3, 500);
 
     return NextResponse.json({ 
       answer, 

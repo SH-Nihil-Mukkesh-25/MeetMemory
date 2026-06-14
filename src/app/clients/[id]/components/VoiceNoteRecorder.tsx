@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Mic, MicOff, Upload, Loader2, CheckCircle2, XCircle,
-  Tag, AlertCircle, CheckSquare2, Save, Pencil, X, Square,
+  Tag, AlertCircle, CheckSquare2, Save, Pencil, X, Square, Database
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -44,9 +44,9 @@ const MAX_SECONDS = 3 * 60; // 3 minutes
 // ─── Status Step Indicator ────────────────────────────────────────────────────
 
 const STEPS: { id: ProcessingStep; label: string }[] = [
-  { id: 'transcribing', label: 'Transcribing audio…' },
-  { id: 'extracting',   label: 'Extracting meeting memory…' },
-  { id: 'done',         label: 'Storing to Hindsight…' },
+  { id: 'transcribing', label: '📝 Transcribing with Groq Whisper' },
+  { id: 'extracting',   label: '🧠 Extracting Structured Memory' },
+  { id: 'done',         label: '✨ Ready to Store' },
 ];
 
 function ProcessingSteps({ current }: { current: ProcessingStep }) {
@@ -59,7 +59,7 @@ function ProcessingSteps({ current }: { current: ProcessingStep }) {
 
         return (
           <div key={step.id} className={`flex items-center gap-2.5 text-xs transition-all ${
-            isActive ? 'text-violet-300' : isDone ? 'text-emerald-400' : 'text-muted-foreground/40'
+            isActive ? 'text-[#c15f3c]' : isDone ? 'text-emerald-400' : 'text-muted-foreground/40'
           }`}>
             {isDone
               ? <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
@@ -231,10 +231,11 @@ export function VoiceNoteRecorder({
   // ── Idle ────────────────────────────────────────────────────────────────────
   if (mode === 'idle' || mode === 'uploading') {
     return (
-      <div className="rounded-xl border border-border bg-card p-4">
-        <p className="text-xs font-medium text-muted-foreground mb-3 flex items-center gap-1.5">
-          <Mic className="h-3.5 w-3.5" />Voice Note
-        </p>
+      <div className="rounded-2xl border border-[rgba(193,95,60,0.12)] bg-[rgba(255,255,255,0.02)] backdrop-blur-md p-5 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+        <h3 className="text-sm font-semibold flex items-center gap-2 text-zinc-100 mb-4">
+          <Mic className="h-4 w-4 text-[#c15f3c]" />
+          Quick Voice Note
+        </h3>
         {error && (
           <p className="text-xs text-rose-400 mb-2 flex items-center gap-1.5">
             <XCircle className="h-3.5 w-3.5" />{error}
@@ -305,13 +306,13 @@ export function VoiceNoteRecorder({
   // ── Recorded — awaiting process ──────────────────────────────────────────────
   if (mode === 'recorded') {
     return (
-      <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+      <div className="rounded-2xl border border-[rgba(193,95,60,0.12)] bg-[rgba(255,255,255,0.02)] backdrop-blur-md p-4 space-y-3 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
         <div className="flex items-center gap-2">
           <MicOff className="h-4 w-4 text-emerald-400" />
           <span className="text-sm font-medium">Recorded {formatTime(elapsed)}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Button size="sm" onClick={handleRecordedProcess} className="bg-violet-600 hover:bg-violet-500 text-white border-0 flex-1">
+          <Button size="sm" onClick={handleRecordedProcess} className="bg-[#c15f3c] hover:bg-[#d97757] text-white border-0 flex-1 shadow-[0_0_15px_rgba(193,95,60,0.3)]">
             <Loader2 className="h-3.5 w-3.5 mr-1.5" />Process with AI
           </Button>
           <Button size="sm" variant="ghost" onClick={reset}>
@@ -325,8 +326,8 @@ export function VoiceNoteRecorder({
   // ── Processing ────────────────────────────────────────────────────────────────
   if (mode === 'processing') {
     return (
-      <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-4">
-        <p className="text-xs font-medium text-violet-300 mb-3">Processing voice note…</p>
+      <div className="rounded-2xl border border-[rgba(193,95,60,0.12)] bg-[rgba(255,255,255,0.02)] backdrop-blur-md p-4 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+        <p className="text-xs font-medium text-[#c15f3c] mb-3">Processing voice note…</p>
         <ProcessingSteps current={processingStep} />
       </div>
     );
@@ -335,9 +336,13 @@ export function VoiceNoteRecorder({
   // ── Preview — confirm extracted data ─────────────────────────────────────────
   if (mode === 'preview' && extracted) {
     return (
-      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <div className="rounded-2xl border border-[rgba(193,95,60,0.12)] bg-[rgba(255,255,255,0.02)] backdrop-blur-md overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.2)]">
+      <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-[rgba(255,255,255,0.05)]">
+        <h3 className="text-sm font-semibold flex items-center gap-2 text-zinc-100">
+          <Mic className="h-4 w-4 text-[#c15f3c]" />
+          Quick Voice Note
+        </h3>
+        <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
             <span className="text-sm font-medium text-emerald-300">Memory extracted</span>
           </div>
@@ -400,9 +405,9 @@ export function VoiceNoteRecorder({
           >
             {saving
               ? <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-              : <Save className="h-3.5 w-3.5 mr-1.5" />
+              : <Database className="h-3.5 w-3.5 mr-1.5" />
             }
-            Save this memory
+            {saving ? '📦 Saving to Hindsight...' : '📦 Save to Hindsight'}
           </Button>
           {onEditExtracted && (
             <Button

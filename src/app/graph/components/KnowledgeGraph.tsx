@@ -8,15 +8,16 @@ import * as d3 from 'd3';
 export interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
   label: string;
-  type: 'client' | 'topic' | 'concern' | 'action';
+  type: 'client' | 'topic' | 'concern' | 'action' | 'meeting';
   clientId?: string;
   count: number;
+  date?: number; // Used for timeline sorting
 }
 
 export interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
   source: string | GraphNode;
   target: string | GraphNode;
-  type: 'topic' | 'concern' | 'action';
+  type: 'topic' | 'concern' | 'action' | 'meeting';
   weight: number;
 }
 
@@ -30,6 +31,7 @@ interface KnowledgeGraphProps {
   visibleTypes: Set<string>;
   searchQuery: string;
   highlightClientId?: string | null;
+  layoutMode: 'relationship' | 'timeline' | 'concern';
   onClientClick: (clientId: string) => void;
   onNodeHover: (node: GraphNode | null, x: number, y: number) => void;
   onNodeClick: (node: GraphNode) => void;
@@ -38,27 +40,30 @@ interface KnowledgeGraphProps {
 // ─── Colors & Sizes ──────────────────────────────────────────────────────────
 
 const NODE_COLORS: Record<GraphNode['type'], string> = {
-  client:  '#7F77DD',
-  topic:   '#378ADD',
-  concern: '#EF9F27',
-  action:  '#1D9E75',
+  client:  '#c15f3c', // Orange
+  topic:   '#4ea8ff', // Blue
+  concern: '#ffb547', // Yellow-Orange
+  action:  '#27c498', // Emerald
+  meeting: '#f4f3ee', // Off-white
 };
 
 const NODE_RADII: Record<GraphNode['type'], number> = {
-  client:  22,
-  topic:   13,
-  concern: 13,
-  action:  9,
+  client:  28,
+  meeting: 16,
+  topic:   10,
+  concern: 12,
+  action:  8,
 };
 
 const LINK_COLORS: Record<GraphLink['type'], string> = {
-  topic:   '#60a5fa44',
-  concern: '#f97316aa',
-  action:  '#1D9E7588',
+  topic:   'rgba(78, 168, 255, 0.25)',
+  concern: 'rgba(255, 181, 71, 0.35)',
+  action:  'rgba(39, 196, 152, 0.25)',
+  meeting: 'rgba(244, 243, 238, 0.2)',
 };
 
 export function KnowledgeGraph({
-  data, visibleTypes, searchQuery, highlightClientId,
+  data, visibleTypes, searchQuery, highlightClientId, layoutMode,
   onClientClick, onNodeHover, onNodeClick,
 }: KnowledgeGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -68,18 +73,34 @@ export function KnowledgeGraph({
     const svg = d3.select(svgRef.current!);
     svg.selectAll('*').remove();
 
-    const container = svgRef.current!.parentElement!;
+    const container = svgRef.current?.parentElement;
+    if (!container) return;
     const W = container.clientWidth || 800;
     const H = container.clientHeight || 600;
 
     svg.attr('width', W).attr('height', H);
 
+    // Add glow filters
+    const defs = svg.append('defs');
+    const filter = defs.append('filter')
+      .attr('id', 'glow-selected')
+      .attr('x', '-50%')
+      .attr('y', '-50%')
+      .attr('width', '200%')
+      .attr('height', '200%');
+    filter.append('feGaussianBlur')
+      .attr('stdDeviation', '6')
+      .attr('result', 'coloredBlur');
+    const feMerge = filter.append('feMerge');
+    feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
     // Filter nodes by visible types + search
     const query = searchQuery.toLowerCase();
-    const filteredNodes = data.nodes.filter(n =>
-      visibleTypes.has(n.type) &&
-      (query === '' || n.label.toLowerCase().includes(query))
-    );
+    const filteredNodes = data.nodes.filter(n => {
+      if (layoutMode === 'concern' && n.type !== 'client' && n.type !== 'meeting' && n.type !== 'concern') return false;
+      return visibleTypes.has(n.type) && (query === '' || n.label.toLowerCase().includes(query));
+    });
     const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
 
     const filteredLinks = data.links.filter(l => {
@@ -94,21 +115,69 @@ export function KnowledgeGraph({
 
     // Zoom
     const zoomG = svg.append('g');
-    svg.call(
-      d3.zoom<SVGSVGElement, unknown>()
-        .scaleExtent([0.2, 4])
-        .on('zoom', e => zoomG.attr('transform', e.transform))
-    );
+    const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.1, 4])
+      .on('zoom', e => {
+        zoomG.attr('transform', e.transform);
+        // Smart Labels: show full labels when zoomed in > 1.2x
+        svg.selectAll('.node-label')
+          .style('opacity', (d: any) => e.transform.k > 0.8 || d.type === 'client' || d.type === 'meeting' ? 1 : 0)
+          .text((d: any) => {
+            if (e.transform.k > 1.2 || d.type === 'client' || d.type === 'meeting') return d.label;
+            return d.label.length > 14 ? d.label.slice(0, 13) + '…' : d.label;
+          });
+      });
+    svg.call(zoomBehavior);
+
+    // Search focus
+    if (query) {
+      const match = nodes.find(n => n.label.toLowerCase().includes(query));
+      if (match && match.x && match.y) {
+         // Smooth zoom to matched node if possible
+         svg.transition().duration(750).call(
+           zoomBehavior.transform as any, 
+           d3.zoomIdentity.translate(W/2, H/2).scale(1.5).translate(-match.x, -match.y)
+         );
+      }
+    }
 
     // Simulation
-    const sim = d3.forceSimulation<GraphNode>(nodes)
-      .force('link', d3.forceLink<GraphNode, GraphLink>(links).id(d => d.id).distance(d => {
-        const w = (d as GraphLink).weight || 1;
-        return 100 - Math.min(w * 5, 50);
-      }))
-      .force('charge', d3.forceManyBody().strength(-250))
-      .force('center', d3.forceCenter(W / 2, H / 2))
-      .force('collision', d3.forceCollide<GraphNode>().radius(d => NODE_RADII[d.type] + 8));
+    const sim = d3.forceSimulation<GraphNode>(nodes);
+    const linkForce = d3.forceLink<GraphNode, GraphLink>(links).id(d => d.id);
+
+    if (layoutMode === 'timeline') {
+      const meetings = nodes.filter(n => n.type === 'meeting').sort((a, b) => (a.date || 0) - (b.date || 0));
+      const meetingXMap = new Map();
+      meetings.forEach((m, i) => meetingXMap.set(m.id, (W / (meetings.length + 1)) * (i + 1)));
+
+      sim
+        .force('x', d3.forceX<GraphNode>(d => {
+          if (d.type === 'meeting') return meetingXMap.get(d.id) || W / 2;
+          return W / 2;
+        }).strength(d => (d.type === 'meeting' ? 1 : 0.05)))
+        .force('y', d3.forceY<GraphNode>(H / 2).strength(0.05))
+        .force('charge', d3.forceManyBody().strength(-400))
+        .force('collision', d3.forceCollide<GraphNode>().radius(d => NODE_RADII[d.type] + 15));
+      
+      linkForce.distance(60);
+    } else if (layoutMode === 'concern') {
+      sim
+        .force('center', d3.forceCenter(W / 2, H / 2))
+        .force('charge', d3.forceManyBody().strength(-600))
+        .force('collision', d3.forceCollide<GraphNode>().radius(d => NODE_RADII[d.type] + 30));
+      
+      linkForce.distance(150);
+    } else {
+      // Relationship view (edge-to-edge spread)
+      sim
+        .force('center', d3.forceCenter(W / 2, H / 2))
+        .force('charge', d3.forceManyBody().strength(-1000))
+        .force('collision', d3.forceCollide<GraphNode>().radius(d => NODE_RADII[d.type] + 25));
+      
+      linkForce.distance(d => d.type === 'meeting' ? 180 : 120);
+    }
+
+    sim.force('link', linkForce);
 
     simRef.current = sim;
 
@@ -141,18 +210,27 @@ export function KnowledgeGraph({
       })
       .attr('stroke', d => d.id === highlightClientId ? NODE_COLORS.client : 'rgba(255,255,255,0.15)')
       .attr('stroke-width', d => d.id === highlightClientId ? 3 : 1.5)
-      .attr('filter', d => d.id === highlightClientId ? 'drop-shadow(0 0 8px #7F77DD)' : 'none');
+      .attr('filter', d => d.id === highlightClientId ? 'url(#glow-selected)' : 'none')
+      .attr('class', 'transition-all duration-300')
+      .on('mouseover', function(e, d) {
+        d3.select(this).attr('transform', 'scale(1.1)').attr('filter', 'url(#glow-selected)');
+      })
+      .on('mouseout', function(e, d) {
+        d3.select(this).attr('transform', 'scale(1)').attr('filter', d.id === highlightClientId ? 'url(#glow-selected)' : 'none');
+      });
 
     // Labels
     node.append('text')
+      .attr('class', 'node-label')
       .text(d => d.label.length > 14 ? d.label.slice(0, 13) + '…' : d.label)
       .attr('text-anchor', 'middle')
-      .attr('dy', d => d.type === 'client' ? '0.35em' : NODE_RADII[d.type] + 13)
-      .attr('font-size', d => d.type === 'client' ? '10px' : '9px')
-      .attr('font-weight', d => d.type === 'client' ? '700' : '400')
-      .attr('fill', d => d.type === 'client' ? '#fff' : 'rgba(255,255,255,0.75)')
+      .attr('dy', d => d.type === 'client' || d.type === 'meeting' ? '0.35em' : NODE_RADII[d.type] + 13)
+      .attr('font-size', d => d.type === 'client' || d.type === 'meeting' ? '10px' : '9px')
+      .attr('font-weight', d => d.type === 'client' || d.type === 'meeting' ? '700' : '500')
+      .attr('fill', d => d.type === 'client' || d.type === 'meeting' ? '#000' : 'rgba(255,255,255,0.85)')
       .style('pointer-events', 'none')
-      .style('user-select', 'none');
+      .style('user-select', 'none')
+      .style('text-shadow', d => d.type === 'client' || d.type === 'meeting' ? 'none' : '0px 2px 4px rgba(0,0,0,0.8)');
 
     // Count badge for non-client nodes with count > 1
     node.filter(d => d.type !== 'client' && d.count > 1)
@@ -172,8 +250,8 @@ export function KnowledgeGraph({
       .on('mouseout',  ()    => onNodeHover(null, 0, 0))
       .on('click', (e, d) => {
         e.stopPropagation();
-        if (d.type === 'client' && d.clientId) {
-          onClientClick(d.clientId);
+        if (d.type === 'client') {
+          onClientClick(d.id);
         } else {
           onNodeClick(d);
         }
@@ -188,7 +266,7 @@ export function KnowledgeGraph({
         .attr('y2', d => (d.target as GraphNode).y!);
       node.attr('transform', d => `translate(${d.x!},${d.y!})`);
     });
-  }, [data, visibleTypes, searchQuery, highlightClientId, onClientClick, onNodeHover, onNodeClick]);
+  }, [data, visibleTypes, searchQuery, highlightClientId, layoutMode, onClientClick, onNodeHover, onNodeClick]);
 
   useEffect(() => {
     if (!svgRef.current) return;

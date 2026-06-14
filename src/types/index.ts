@@ -2,9 +2,6 @@ export interface Client {
   id: string;
   name: string;
   company: string;
-  role: string;
-  industry: string;
-  linkedinUrl?: string;
   createdAt: string;
 }
 

@@ -12,17 +12,39 @@ interface HindsightMatch {
   metadata: Record<string, unknown>;
 }
 
+let _mockStore: Array<{ id: string; text: string; metadata: Record<string, unknown> }> = [];
+
 class HindsightClient {
   constructor(public apiKey: string) {}
 
-  async store(): Promise<{ id: string }> {
-    // Mock: in production this would call the Hindsight REST/SDK endpoint
-    return { id: uuidv4() };
+  async store(payload: { text: string; metadata: Record<string, unknown> }): Promise<{ id: string }> {
+    const id = uuidv4();
+    _mockStore.push({ id, ...payload });
+    return { id };
   }
 
-  async search(): Promise<{ matches: HindsightMatch[] }> {
-    // Mock: always returns an empty result set so the real UI empty-state is exercised
-    return { matches: [] };
+  async search(query: { query: string; filters?: Record<string, string>; topK?: number }): Promise<{ matches: HindsightMatch[] }> {
+    // Basic mock implementation: filter by metadata filters and basic keyword match
+    let results = _mockStore;
+    if (query.filters) {
+      for (const [key, val] of Object.entries(query.filters)) {
+        results = results.filter(item => item.metadata[key] === val);
+      }
+    }
+    
+    // Simulate keyword matching (very basic)
+    const qTerms = query.query.toLowerCase().split(' ').filter(t => t.length > 2);
+    if (qTerms.length > 0) {
+      results = results.filter(item => {
+        const text = item.text.toLowerCase();
+        return qTerms.some(term => text.includes(term));
+      });
+    }
+
+    // Return mapped matches
+    return {
+      matches: results.slice(0, query.topK || 10).map(r => ({ metadata: r.metadata }))
+    };
   }
 }
 
@@ -61,12 +83,17 @@ export async function storeMemory(payload: MeetingMemory): Promise<string> {
 
 export async function recallMemories(
   query: string,
-  clientId: string,
+  clientId?: string,
   topK: number = 10,
 ): Promise<MeetingMemory[]> {
-  console.log(`[Hindsight] recall — query="${query}" clientId="${clientId}" topK=${topK}`);
+  console.log(`[Hindsight] recall — query="${query}" clientId="${clientId || 'GLOBAL'}" topK=${topK}`);
 
-  const results = await hindsight.search({ query, filters: { clientId, memoryType: 'meeting_record' }, topK });
+  const filters: Record<string, string> = { memoryType: 'meeting_record' };
+  if (clientId) {
+    filters.clientId = clientId;
+  }
+
+  const results = await hindsight.search({ query, filters, topK });
 
   const memories = results.matches.map(m => m.metadata as unknown as MeetingMemory);
 

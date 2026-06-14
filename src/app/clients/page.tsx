@@ -16,9 +16,6 @@ import { Client } from '@/types';
 interface NewClientFormData {
   name: string;
   company: string;
-  role: string;
-  industry: string;
-  linkedinUrl: string;
 }
 
 function NewClientDialog({ open, onOpenChange, onCreated }: {
@@ -28,7 +25,7 @@ function NewClientDialog({ open, onOpenChange, onCreated }: {
 }) {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<NewClientFormData>({
-    name: '', company: '', role: '', industry: '', linkedinUrl: '',
+    name: '', company: ''
   });
 
   const set = <K extends keyof NewClientFormData>(k: K, v: string) =>
@@ -40,14 +37,11 @@ function NewClientDialog({ open, onOpenChange, onCreated }: {
     try {
       createClient({
         name: form.name.trim(),
-        company: form.company.trim(),
-        role: form.role.trim(),
-        industry: form.industry.trim(),
-        linkedinUrl: form.linkedinUrl.trim() || undefined,
+        company: form.company.trim()
       });
       onCreated();
       onOpenChange(false);
-      setForm({ name: '', company: '', role: '', industry: '', linkedinUrl: '' });
+      setForm({ name: '', company: '' });
     } finally {
       setLoading(false);
     }
@@ -81,36 +75,6 @@ function NewClientDialog({ open, onOpenChange, onCreated }: {
                 placeholder="Acme Corp"
                 value={form.company}
                 onChange={e => set('company', e.target.value)}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="client-role">Role</Label>
-              <input
-                id="client-role"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="VP of Engineering"
-                value={form.role}
-                onChange={e => set('role', e.target.value)}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="client-industry">Industry</Label>
-              <input
-                id="client-industry"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="SaaS"
-                value={form.industry}
-                onChange={e => set('industry', e.target.value)}
-              />
-            </div>
-            <div className="col-span-2 space-y-1.5">
-              <Label htmlFor="client-linkedin">LinkedIn URL</Label>
-              <input
-                id="client-linkedin"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="https://linkedin.com/in/..."
-                value={form.linkedinUrl}
-                onChange={e => set('linkedinUrl', e.target.value)}
               />
             </div>
           </div>
@@ -150,12 +114,6 @@ function ClientCard({ client }: { client: Client }) {
                 <Building2 className="h-3 w-3 flex-shrink-0" />
                 <span className="truncate">{client.company}</span>
               </p>
-              {client.role && (
-                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                  <Briefcase className="h-3 w-3 flex-shrink-0" />
-                  <span className="truncate">{client.role}</span>
-                </p>
-              )}
             </div>
           </div>
           <div className="text-right flex-shrink-0">
@@ -169,9 +127,6 @@ function ClientCard({ client }: { client: Client }) {
           <div className="mt-4 pt-3 border-t border-border flex items-center gap-1.5 text-xs text-muted-foreground">
             <Calendar className="h-3 w-3" />
             Last: {format(new Date(lastMeeting.date), 'MMM d, yyyy')}
-            {client.industry && (
-              <span className="ml-auto px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">{client.industry}</span>
-            )}
           </div>
         )}
       </div>
@@ -190,7 +145,7 @@ export default function ClientsPage() {
   }, [refresh]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-28">
       {/* Page header */}
       <div className="flex items-center justify-between mb-8">
         <div>

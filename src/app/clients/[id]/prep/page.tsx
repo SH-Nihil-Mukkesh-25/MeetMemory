@@ -184,57 +184,67 @@ function BriefPanel({ brief, memories, isDemo = false }: {
   const sentiment = SENTIMENT_CONFIG[brief.relationshipSentiment] || SENTIMENT_CONFIG.Unknown;
 
   return (
-    <div className="space-y-3">
-      {/* Context Summary */}
-      <BriefCard icon={Brain} title="Relationship Context">
-        <p className="text-sm text-muted-foreground leading-relaxed">{brief.contextSummary}</p>
-      </BriefCard>
+    <div className="space-y-4">
+      {/* Top Row: Context & Sentiment */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="lg:col-span-3">
+          <BriefCard icon={Brain} title="Relationship Context" className="h-full">
+            <p className="text-sm text-muted-foreground leading-relaxed">{brief.contextSummary}</p>
+          </BriefCard>
+        </div>
+        <div className="lg:col-span-1">
+          <BriefCard icon={Activity} title="Sentiment" className="h-full flex flex-col justify-center items-center py-6">
+            <Badge variant="outline" className={`text-sm font-medium border px-4 py-2 mt-2 ${sentiment.className}`}>
+              {sentiment.label}
+            </Badge>
+          </BriefCard>
+        </div>
+      </div>
 
-      {/* Open Action Items */}
-      <BriefCard icon={CheckSquare2} title="Open Action Items">
-        {brief.openActionItems.length === 0 ? (
-          <p className="text-sm text-muted-foreground italic">No open action items found.</p>
-        ) : (
-          <ul className="space-y-2">
-            {brief.openActionItems.map((item, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-sm">
-                <span className="mt-0.5 flex-shrink-0 h-4 w-4 rounded border border-border flex items-center justify-center">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        )}
-      </BriefCard>
+      {/* Middle Row: Action Items & Topics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <BriefCard icon={CheckSquare2} title="Open Action Items" className="h-full">
+          {brief.openActionItems.length === 0 ? (
+            <p className="text-sm text-muted-foreground italic">No open action items found.</p>
+          ) : (
+            <ul className="space-y-2">
+              {brief.openActionItems.map((item, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm">
+                  <span className="mt-0.5 flex-shrink-0 h-4 w-4 rounded border border-border flex items-center justify-center">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
+        </BriefCard>
 
-      {/* Suggested Topics */}
-      <BriefCard icon={MessageSquare} title="Suggested Topics">
-        {brief.suggestedTopics.length === 0 ? (
-          <p className="text-sm text-muted-foreground italic">No topics suggested.</p>
-        ) : (
-          <ol className="space-y-2">
-            {brief.suggestedTopics.map((topic, i) => (
-              <li key={i} className="flex items-start gap-3 text-sm">
-                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-muted-foreground">
-                  {i + 1}
-                </span>
-                {topic}
-              </li>
-            ))}
-          </ol>
-        )}
-      </BriefCard>
+        <BriefCard icon={MessageSquare} title="Suggested Topics" className="h-full">
+          {brief.suggestedTopics.length === 0 ? (
+            <p className="text-sm text-muted-foreground italic">No topics suggested.</p>
+          ) : (
+            <ol className="space-y-2">
+              {brief.suggestedTopics.map((topic, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm">
+                  <span className="flex-shrink-0 h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-muted-foreground">
+                    {i + 1}
+                  </span>
+                  {topic}
+                </li>
+              ))}
+            </ol>
+          )}
+        </BriefCard>
+      </div>
 
-      {/* Risk Flags */}
-      <BriefCard
-        icon={AlertTriangle}
-        title="Risk Flags"
-        className={brief.riskFlags.length > 0 ? 'border-amber-500/20 bg-amber-500/5' : ''}
-      >
-        {brief.riskFlags.length === 0 ? (
-          <p className="text-sm text-emerald-400 italic">No risk flags detected.</p>
-        ) : (
+      {/* Bottom Row: Risks */}
+      {brief.riskFlags.length > 0 && (
+        <BriefCard
+          icon={AlertTriangle}
+          title="Risk Flags"
+          className="border-amber-500/20 bg-amber-500/5"
+        >
           <ul className="space-y-2">
             {brief.riskFlags.map((flag, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-amber-300">
@@ -243,15 +253,8 @@ function BriefPanel({ brief, memories, isDemo = false }: {
               </li>
             ))}
           </ul>
-        )}
-      </BriefCard>
-
-      {/* Relationship Sentiment */}
-      <BriefCard icon={Activity} title="Relationship Sentiment">
-        <Badge variant="outline" className={`text-sm font-medium border px-3 py-1 ${sentiment.className}`}>
-          {sentiment.label}
-        </Badge>
-      </BriefCard>
+        </BriefCard>
+      )}
 
       {/* Memories drawer — only in full (non-demo) or demo mode with memories */}
       {!isDemo && memories.length > 0 && <MemoriesDrawer memories={memories} />}

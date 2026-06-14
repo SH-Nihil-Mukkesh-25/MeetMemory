@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { TrendingUp, TrendingDown, Minus, AlertTriangle, Lightbulb, Brain, Loader2, RefreshCw, Zap } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, AlertTriangle, Lightbulb, Brain, Loader2, RefreshCw, Zap, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { HindsightBadge } from '@/components/hindsight-ui';
 
 export interface RelationshipHealthData {
   overallScore: number;
@@ -176,11 +178,12 @@ export function RelationshipHealth({ clientId, clientName, meetingCount }: Relat
   const TrendIcon = trendCfg?.icon || Minus;
 
   return (
-    <div className="rounded-xl border border-border bg-card overflow-hidden">
+    <div className="rounded-2xl border border-[rgba(193,95,60,0.12)] bg-[rgba(255,255,255,0.02)] backdrop-blur-md overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.2)]">
       {/* Header */}
       <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-border">
-        <h3 className="text-sm font-semibold flex items-center gap-2">
-          <Zap className="h-4 w-4 text-amber-400" />Relationship Health
+        <h3 className="text-sm font-semibold flex items-center gap-2 text-zinc-100">
+          <Activity className="h-4 w-4 text-[#c15f3c]" />
+          Relationship Health
         </h3>
         {calculated && (
           <button
@@ -205,7 +208,7 @@ export function RelationshipHealth({ clientId, clientName, meetingCount }: Relat
               size="sm"
               onClick={calculate}
               disabled={meetingCount === 0}
-              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white border-0"
+              className="w-full bg-[#c15f3c] hover:bg-[#d97757] text-white border-0 shadow-[0_0_15px_rgba(193,95,60,0.3)]"
             >
               <Brain className="h-3.5 w-3.5 mr-1.5" />Calculate Health
             </Button>
@@ -218,7 +221,7 @@ export function RelationshipHealth({ clientId, clientName, meetingCount }: Relat
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center gap-2 py-4 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin text-violet-400" />
+            <Loader2 className="h-4 w-4 animate-spin text-[#c15f3c]" />
             <span>Analyzing {meetingCount} meetings...</span>
           </div>
         )}
@@ -230,9 +233,18 @@ export function RelationshipHealth({ clientId, clientName, meetingCount }: Relat
 
         {/* Result */}
         {health && !loading && (
-          <div className="space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, staggerChildren: 0.1 }}
+            className="space-y-4"
+          >
             {/* Score + sparkline row */}
-            <div className="flex items-center justify-between gap-4">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center justify-between gap-4"
+            >
               <ScoreRing score={health.overallScore} trend={health.trend} />
               <div className="flex-1 space-y-2">
                 {/* Trend badge */}
@@ -246,51 +258,73 @@ export function RelationshipHealth({ clientId, clientName, meetingCount }: Relat
                   <Sparkline values={health.sentimentHistory} trend={health.trend} />
                 )}
               </div>
-            </div>
+            </motion.div>
 
             {/* Deal momentum */}
-            <div className="flex items-center justify-between text-xs">
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+              className="flex items-center justify-between text-xs"
+            >
               <span className="text-muted-foreground">Deal Momentum</span>
               <Badge variant="outline" className={`capitalize text-xs border ${MOMENTUM_CONFIG[health.dealMomentum] || ''}`}>
                 {health.dealMomentum}
               </Badge>
-            </div>
+            </motion.div>
 
             {/* Engagement level */}
-            <div className="flex items-center justify-between text-xs">
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+              className="flex items-center justify-between text-xs"
+            >
               <span className="text-muted-foreground">Engagement</span>
               <span className="font-medium capitalize">{health.engagementLevel}</span>
-            </div>
+            </motion.div>
 
             {/* Reasoning */}
-            <p className="text-xs text-muted-foreground leading-relaxed border-t border-border pt-3">
-              {health.reasoning}
-            </p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <p className="text-xs text-muted-foreground leading-relaxed border-t border-border pt-3">
+                {health.reasoning}
+              </p>
+            </motion.div>
 
             {/* Top risk */}
             {health.topRisk && (
-              <div className="rounded-lg bg-rose-500/5 border border-rose-500/20 px-3 py-2 flex items-start gap-2">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className="rounded-lg bg-rose-500/5 border border-rose-500/20 px-3 py-2 flex items-start gap-2"
+              >
                 <AlertTriangle className="h-3.5 w-3.5 text-rose-400 flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-rose-300 leading-relaxed">{health.topRisk}</p>
-              </div>
+              </motion.div>
             )}
 
             {/* Top opportunity */}
             {health.topOpportunity && (
-              <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 px-3 py-2 flex items-start gap-2">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 px-3 py-2 flex items-start gap-2"
+              >
                 <Lightbulb className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-emerald-300 leading-relaxed">{health.topOpportunity}</p>
-              </div>
+              </motion.div>
             )}
 
             {/* Footer */}
-            <div className="border-t border-border pt-2 flex items-center gap-1.5">
-              <Brain className="h-3 w-3 text-violet-400" />
-              <span className="text-[10px] text-muted-foreground">
-                Powered by Hindsight · {meetingsAnalyzed} memories
-              </span>
-            </div>
-          </div>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="border-t border-border pt-3 flex flex-col gap-1.5"
+            >
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>Memory Confidence</span>
+                <span className="font-medium text-zinc-300">High</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                <span>Last Updated</span>
+                <span className="font-medium text-zinc-300">Just now</span>
+              </div>
+              <HindsightBadge count={meetingsAnalyzed} />
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </div>

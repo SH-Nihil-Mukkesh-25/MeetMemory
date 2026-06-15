@@ -33,7 +33,7 @@ function Counter({ from, to, duration = 2 }: { from: number; to: number; duratio
 }
 
 export default function Home() {
-  const demoVideoUrl = ""; // Placeholder for YouTube URL
+  const demoVideoUrl = "https://www.youtube.com/embed/XOnAli6LJTg?si=hTYSuDSVnEThvfi_";
 
   return (
     <div className="relative min-h-screen bg-[#0a0a0a] text-white selection:bg-[#c15f3c]/30 selection:text-white font-sans overflow-x-hidden">
@@ -46,15 +46,31 @@ export default function Home() {
 
       {/* ── Hero Section ── */}
       <section className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-24 text-center z-10">
-        <motion.div
+        <motion.a
+          href="https://github.com/SH-Nihil-Mukkesh-25/MeetMemory.git"
+          target="_blank"
+          rel="noopener noreferrer"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] backdrop-blur-md text-zinc-300 text-xs font-semibold mb-8 tracking-wide"
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer backdrop-blur-md text-zinc-300 hover:text-white text-sm font-semibold mb-8 tracking-wide"
         >
-          <Sparkles className="h-3.5 w-3.5 text-[#c15f3c]" />
-          Memory-Powered Relationship Intelligence
-        </motion.div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4"
+          >
+            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4" />
+          </svg>
+          Check the Source-Code
+        </motion.a>
 
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
@@ -455,11 +471,24 @@ export default function Home() {
       {/* ── Footer ── */}
       <footer className="border-t border-[rgba(255,255,255,0.08)] bg-[#050505] py-12 relative z-10">
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="relative h-8 w-8 overflow-hidden rounded-md">
-              <Image src="/logo.png" alt="Logo" fill className="object-cover" />
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-3">
+              <div className="relative h-8 w-8 overflow-hidden rounded-md">
+                <Image src="/logo.png" alt="Logo" fill className="object-cover" />
+              </div>
+              <span className="font-bold text-lg text-white">MeetMemory</span>
             </div>
-            <span className="font-bold text-lg text-white">MeetMemory</span>
+            <span className="text-[11px] text-zinc-500 font-medium pl-11">
+              Built by{" "}
+              <a 
+                href="https://github.com/SH-Nihil-Mukkesh-25" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-white transition-colors underline decoration-zinc-700 underline-offset-2"
+              >
+                SH-Nihil-Mukkesh-25
+              </a>
+            </span>
           </div>
           
           <div className="flex gap-8 text-sm font-medium text-zinc-500">
